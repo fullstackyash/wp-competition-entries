@@ -60,7 +60,7 @@ class WCE_SHORTCODE {
 		$cur_page = $page;
 		$page     = --$page;
 		// Set the number of results to display.
-		$per_page = 2;
+		$per_page = 5;
 		$start    = $page * $per_page;
 
 		$args = array(
