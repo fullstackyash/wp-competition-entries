@@ -96,7 +96,7 @@ class WCE_SHORTCODE {
 						<tr>
 							<td><?php echo esc_html( $competition_count ); ?></td>
 							<td><a target="_blank" href="<?php the_permalink( $competition->ID ); ?>"><?php echo esc_html( $competition->post_title ); ?></a></td>
-							<td><?php echo esc_html( $description ); ?></td>
+							<td><?php echo wp_kses_post( $description ); ?></td>
 							<td><?php echo wp_kses_post( $image ); ?></td>
 						</tr>
 						<?php
