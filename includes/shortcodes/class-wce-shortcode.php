@@ -36,7 +36,7 @@ class WCE_SHORTCODE {
 	public function wce_competition_list_shortcode() {
 		ob_start();
 		?>
-		<div class="competition_list_wrapper">
+		<div class="competition_list_wrapper alignwide">
 		<?php
 		$this->wce_competition_list_render_results();
 		?>
