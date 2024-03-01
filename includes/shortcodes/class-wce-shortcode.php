@@ -71,7 +71,11 @@ class WCE_SHORTCODE {
 			'posts_per_page' => $per_page,
 			'offset'         => $start,
 		);
-
+		
+		if ( ! empty( $_POST ) ) {
+			ob_start();
+		}
+		
 		$competition_query = new WP_Query( $args );
 		$competitions      = $competition_query->posts;
 		$count             = $competition_query->found_posts;
