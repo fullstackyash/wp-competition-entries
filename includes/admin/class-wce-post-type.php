@@ -29,58 +29,6 @@ class WCE_POST_TYPE {
 	}
 
 	/**
-	 * Add Custom Columns for entries post type.
-	 *
-	 * @param array $columns columns Array.
-	 * @return array
-	 */
-	public function wce_add_custom_columns( $columns ): array {
-
-		$columns['first_name']     = __( 'First Name', 'wp-competition-entries' );
-		$columns['last_name']      = __( 'Last Name', 'wp-competition-entries' );
-		$columns['email']          = __( 'Email', 'wp-competition-entries' );
-		$columns['phone']          = __( 'Phone', 'wp-competition-entries' );
-		$columns['competition_id'] = __( 'Competition ID', 'wp-competition-entries' );
-
-		return $columns;
-	}
-
-	/**
-	 * Add content for custom columns for entries post type.
-	 *
-	 * @param array $column Columns Array.
-	 * @param int   $post_id  Post id.
-	 * @return void
-	 */
-	public function wce_add_custom_columns_content( $column, $post_id ): void {
-		$first_name     = get_post_meta( $post_id, 'wce_first_name', true );
-		$last_name      = get_post_meta( $post_id, 'wce_last_name', true );
-		$email          = get_post_meta( $post_id, 'wce_email', true );
-		$phone          = get_post_meta( $post_id, 'wce_phone', true );
-		$competition_id = get_post_meta( $post_id, 'wce_competition_id', true );
-
-		if ( 'first_name' === $column ) {
-			echo ! empty( $first_name ) ? esc_html( $first_name ) : '';
-		}
-
-		if ( 'last_name' === $column ) {
-			echo ! empty( $last_name ) ? esc_html( $last_name ) : '';
-		}
-
-		if ( 'email' === $column ) {
-			echo ! empty( $email ) ? esc_html( $email ) : '';
-		}
-
-		if ( 'phone' === $column ) {
-			echo ! empty( $phone ) ? esc_html( $phone ) : '';
-		}
-
-		if ( 'competition_id' === $column ) {
-			echo ! empty( $competition_id ) ? wp_kses_post( '<a target="_blank" href="' . admin_url() . 'post.php?post=' . $competition_id . '&action=edit" >' . $competition_id . '</a>' ) : '';
-		}
-	}
-
-	/**
 	 * Register the custom post type.
 	 *
 	 * @return void
@@ -132,6 +80,59 @@ class WCE_POST_TYPE {
 	}
 
 	/**
+	 * Add Custom Columns for entries post type.
+	 *
+	 * @param array $columns columns Array.
+	 * @return array
+	 */
+	public function wce_add_custom_columns( $columns ): array {
+
+		$columns['first_name']     = __( 'First Name', 'wp-competition-entries' );
+		$columns['last_name']      = __( 'Last Name', 'wp-competition-entries' );
+		$columns['email']          = __( 'Email', 'wp-competition-entries' );
+		$columns['phone']          = __( 'Phone', 'wp-competition-entries' );
+		$columns['competition_id'] = __( 'Competition ID', 'wp-competition-entries' );
+
+		return $columns;
+	}
+
+	/**
+	 * Add content for custom columns for entries post type.
+	 *
+	 * @param array $column Columns Array.
+	 * @param int   $post_id  Post id.
+	 * @return void
+	 */
+	public function wce_add_custom_columns_content( $column, $post_id ): void {
+		$first_name     = get_post_meta( $post_id, 'wce_first_name', true );
+		$last_name      = get_post_meta( $post_id, 'wce_last_name', true );
+		$email          = get_post_meta( $post_id, 'wce_email', true );
+		$phone          = get_post_meta( $post_id, 'wce_phone', true );
+		$competition_id = get_post_meta( $post_id, 'wce_competition_id', true );
+
+		if ( 'first_name' === $column ) {
+			echo ! empty( $first_name ) ? esc_html( $first_name ) : '';
+		}
+
+		if ( 'last_name' === $column ) {
+			echo ! empty( $last_name ) ? esc_html( $last_name ) : '';
+		}
+
+		if ( 'email' === $column ) {
+			echo ! empty( $email ) ? esc_html( $email ) : '';
+		}
+
+		if ( 'phone' === $column ) {
+			echo ! empty( $phone ) ? esc_html( $phone ) : '';
+		}
+
+		if ( 'competition_id' === $column ) {
+			echo ! empty( $competition_id ) ? wp_kses_post( '<a target="_blank" href="' . admin_url() . 'post.php?post=' . $competition_id . '&action=edit" >' . $competition_id . '</a>' ) : '';
+		}
+	}
+
+
+	/**
 	 * Custom competition template to render on frontend.
 	 *
 	 * @param string $content Post content.
@@ -155,7 +156,15 @@ class WCE_POST_TYPE {
 	 * @return void
 	 */
 	public function wce_custom_rewrite_rule() {
-		add_rewrite_rule( '^competitions/([^/]+)/submit-entry/?$', 'index.php?post_type=competitions&name=$matches[1]&submit-entry=true', 'top' );
+		// get registered rewrite rules.
+		$rules = get_option( 'rewrite_rules', array() );
+		// set the regex.
+		$regex = '^competitions/([^/]+)/submit-entry/?$';
+		add_rewrite_rule( $regex, 'index.php?post_type=competitions&name=$matches[1]&submit-entry=true', 'top' );
+		// maybe flush rewrite rules if it was not previously in the option.
+		if ( ! isset( $rules[ $regex ] ) ) {
+			flush_rewrite_rules();
+		}
 	}
 
 	/**
